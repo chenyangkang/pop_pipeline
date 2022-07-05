@@ -49,7 +49,7 @@ psmc_p="4+25*2+4+6"   #### pattern of parameters in psmc, 64*1 is the highest so
 
 
 
-from generate_script_utils import *
+from generate_script_utils_for_psmc import *
 
 
 ########## Creat directory #######################################
@@ -85,11 +85,11 @@ def run_psmc_each_sample():
             psmc_r=psmc_r,
             psmc_p=psmc_p,
             perl_path=perl_path,
-            psmc_plot_path=psmc_plot_path)
+            psmc_plot_path=psmc_plot_path,
+            psmc_util_path=psmc_util_path)
 
         filename = f"test_{sample_line['sample_name']}_{index}.sh"
         qsub_monitor(filename, script_str, threads_count=1, max_tasks_count=100, delete=False)
-
 
 
 def run_psmc_pooled():
@@ -118,31 +118,20 @@ def run_psmc_pooled():
             psmc_r=psmc_r,
             psmc_p=psmc_p,
             perl_path=perl_path,
-            psmc_plot_path=psmc_plot_path)
-
+            psmc_plot_path=psmc_plot_path,
+            psmc_util_path=psmc_util_path)
 
         filename = f"test_{pop_name}_{index}.sh"
         qsub_monitor(filename, script_str, threads_count=1, max_tasks_count=100, delete=False)
 
+
+
 if run_psmc == True:
     if run_psmc_pool == True:
         run_psmc_pooled()
+
     else:
         run_psmc_each_sample()
 
 else:
     pass
-
-
-
-# ###################################### Run popsizeABC #####################################
-# for index,sample_line in config_file.iterrows():
-
-
-
-
-
-
-
-############################################# Run Stairwayplot ##################################
-# def generate_stairwayplot_script_str():
