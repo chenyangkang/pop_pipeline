@@ -61,13 +61,19 @@ wait
 ${psmc_path} -N${psmc_N} -t${psmc_t} -r${psmc_r} -p "${psmc_p}" -o ${output_mid_file_dict}/03.psmc/${base_name}.${species_or_pop_name}.d${min_depth}.psmc ${output_mid_file_dict}/03.psmc/${base_name}.${species_or_pop_name}.d${min_depth}.psmcfa
 wait
 
-psmc_title="PSMC plot for sample"${base_name}_${species_or_pop_name}"\n g="${this_generation_length}", mu="${this_mutationrate}", depth="${min_depth}", seuqence quality="${sequence_quality}
+psmc_title="PSMC plot for sample_"${base_name}"_"${species_or_pop_name}"\n g="${this_generation_length}", mu="${this_mutationrate}", depth="${min_depth}", seuqence quality="${sequence_quality}
 
-${perl_path} ${psmc_plot_path} -u ${this_mutationrate} -g ${this_generation_length} -T \
-${psmc_title} \
--P "outside" -f "Helvetica,12" \
--p ${base_name}_${species_or_pop_name} \
-${output_mid_file_dict}/03.psmc/${base_name}.${species_or_pop_name}.d${min_depth}.psmc
+cd ${output_mid_file_dict}/03.psmc
+
+${perl_path} ${psmc_plot_path} \
+    -R \
+    -u ${this_mutationrate} \
+    -g ${this_generation_length} \
+    -T "${psmc_title}" \
+    -P "outside" \
+    -f "Helvetica,12" \
+    -p ${base_name}_${species_or_pop_name} \
+    ${output_mid_file_dict}/03.psmc/${base_name}.${species_or_pop_name}.d${min_depth}.psmc
 
 
 ${psmc_util_path}/splitfa ${output_mid_file_dict}/03.psmc/${base_name}.${species_or_pop_name}.d${min_depth}.split.psmcfa
@@ -141,7 +147,7 @@ wait
 ${psmc_path} -N${psmc_N} -t${psmc_t} -r${psmc_r} -p "${psmc_p}" -o ${output_mid_file_dict}/03.psmc/${species_or_pop_name}.merged.d${min_depth}.psmc ${output_mid_file_dict}/03.psmc/${species_or_pop_name}.merged.d${min_depth}.psmcfa
 wait
 
-psmc_title="PSMC plot for sample"${species_or_pop_name}_merged_"\n g="${this_generation_length}", mu="${this_mutationrate}", depth="${min_depth}", seuqence quality="${sequence_quality}
+psmc_title="PSMC plot for sample"${species_or_pop_name}"_merged_\n g="${this_generation_length}", mu="${this_mutationrate}", depth="${min_depth}", seuqence quality="${sequence_quality}
 
 ${perl_path} ${psmc_plot_path} -u ${this_mutationrate} -g ${this_generation_length} -T \
 ${psmc_title} \

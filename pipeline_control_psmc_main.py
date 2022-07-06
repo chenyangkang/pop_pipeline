@@ -32,7 +32,7 @@ vcfutils_pl_path="/public/software/bcftools-1.11/bin/vcfutils.pl" #### usually i
 fq2psmcfa_path="/beegfs/store4/chenyangkang/software/psmc/utils/fq2psmcfa" #### usually in your psmc package
 psmc_plot_path="/beegfs/store4/chenyangkang/software/psmc/utils/psmc_plot.pl"
 perl_path="/beegfs/store4/chenyangkang/miniconda3/bin/perl"
-psmc_util_path = "/beegfs/store4/chenyangkang/22.pop_pipeline/psmc/utils"
+psmc_util_path = "/beegfs/store4/chenyangkang/software/psmc/utils"
 
 
 

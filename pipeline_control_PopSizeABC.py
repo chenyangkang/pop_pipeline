@@ -34,7 +34,6 @@ if not os.path.exists(f'{output_mid_file_dict}/04.bam'):
     os.mkdir(f'{output_mid_file_dict}/04.bam')
 
 
-
 from generate_script_utils_call_GATKvariants import *
 from generate_script_utils_for_psmc import *
 
