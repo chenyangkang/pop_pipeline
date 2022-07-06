@@ -46,8 +46,10 @@ ls {output_mid_file_dict}/02.vcfgz/*.{pop_name}.g.vcf.gz > {output_mid_file_dict
 {gatk_path} CombineGVCFs \
     -R {ref_genome} -V {output_mid_file_dict}/02.vcfgz/{pop_name}.gvcf.list \
     -O {output_mid_file_dict}/02.vcfgz/{pop_name}.g.vcf.gz
+wait
 
 {gatk_path} GenotypeGVCFs -R {ref_genome} -V {output_mid_file_dict}/02.vcfgz/{pop_name}.g.vcf.gz -O {output_mid_file_dict}/02.vcfgz/{pop_name}.genotype.vcf.gz
+wait
 
 {gatk_path} VariantFiltration \
     -V {output_mid_file_dict}/02.vcfgz/{pop_name}.genotype.vcf.gz \
@@ -59,6 +61,7 @@ ls {output_mid_file_dict}/02.vcfgz/*.{pop_name}.g.vcf.gz > {output_mid_file_dict
     -filter "MQRankSum < -12.5" --filter-name "MQRankSum-12.5" \
     -filter "ReadPosRankSum < -8.0" --filter-name "ReadPosRankSum-8" \
     -O {output_mid_file_dict}/02.vcfgz/{pop_name}.genotype.filtered.vcf.gz
+wait
 
 tabix -p vcf {output_mid_file_dict}/02.vcfgz/{pop_name}.genotype.filtered.vcf.gz
     """

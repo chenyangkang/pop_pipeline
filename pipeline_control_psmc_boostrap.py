@@ -7,7 +7,7 @@ import time
 import sys
 sys.stdout = open("pop.log", "a")
 
-config_file = pd.read_csv('auto_input.csv', sep=',')
+config_file = pd.read_csv('auto_input.lineage.csv', sep=',')
 config_file.columns = ['sample_name','species_or_pop_name','generation_length',\
             'mutation_rate','mutation_rate_lower_bound','mutation_rate_upper_bound',\
                 'unknow1','unknow2','reference_genome_path','bam_file_path','vcf_file_path']
