@@ -1,18 +1,18 @@
 
 def qsub_monitor(filename, str_to_write_into_file, threads_count=1, max_tasks_count=100, delete=False):
-    import os, time
-    current_task_count = int(os.popen("qstat|grep chenyangkang|wc -l").read().strip())
-    while current_task_count >=max_tasks_count:
-        time.sleep(5)
+    # import os, time
+    # current_task_count = int(os.popen("qstat|grep chenyangkang|wc -l").read().strip())
+    # while current_task_count >=max_tasks_count:
+    #     time.sleep(5)
 
     with open(filename,'w') as file:
         file.write(str_to_write_into_file)
 
-    os.popen(f"chmod 755 {filename}",'w')
-    os.popen(f"qsub -l nodes=1:ppn={threads_count} {filename}")
-    time.sleep(0.5)
-    if delete==True:
-        os.remove(filename)
+    # os.popen(f"chmod 755 {filename}",'w')
+    # os.popen(f"qsub -l nodes=1:ppn={threads_count} {filename}")
+    # time.sleep(0.5)
+    # if delete==True:
+    #     os.remove(filename)
 
 
 
@@ -48,12 +48,15 @@ psmc_plot_path={psmc_plot_path}
 """
 ######## psmc process
 cd ${output_mid_file_dict}/01.vcf
-${samtools_path} sort ${bam_path}|bcftools mpileup -Ou -I -f ${this_reference} - |bcftools call -c -Ov > ${output_mid_file_dict}/01.vcf/${base_name}.${species_or_pop_name}.vcf
+${samtools_path} sort -m 10G ${bam_path}|bcftools mpileup -Ou -I -f ${this_reference} - |bcftools call -c -Ov > ${output_mid_file_dict}/01.vcf/${base_name}.${species_or_pop_name}.vcf
 wait
 cd ..
 
 ${vcfutils_pl_path} vcf2fq -d ${min_depth} ${output_mid_file_dict}/01.vcf/${base_name}.${species_or_pop_name}.vcf| gzip > ${output_mid_file_dict}/03.psmc/${base_name}.${species_or_pop_name}.d${min_depth}.psmc.fq.gz
 wait
+
+# rm ${output_mid_file_dict}/01.vcf/${base_name}.${species_or_pop_name}.vcf
+# wait
 
 ${fq2psmcfa_path} -q${sequence_quality} ${output_mid_file_dict}/03.psmc/${base_name}.${species_or_pop_name}.d${min_depth}.psmc.fq.gz > ${output_mid_file_dict}/03.psmc/${base_name}.${species_or_pop_name}.d${min_depth}.psmcfa
 wait
@@ -61,7 +64,7 @@ wait
 ${psmc_path} -N${psmc_N} -t${psmc_t} -r${psmc_r} -p "${psmc_p}" -o ${output_mid_file_dict}/03.psmc/${base_name}.${species_or_pop_name}.d${min_depth}.psmc ${output_mid_file_dict}/03.psmc/${base_name}.${species_or_pop_name}.d${min_depth}.psmcfa
 wait
 
-psmc_title="PSMC plot for sample_"${base_name}"_"${species_or_pop_name}"\n g="${this_generation_length}" mu="${this_mutationrate}" depth="${min_depth}" seuqence quality="${sequence_quality}
+psmc_title="PSMC plot for sample "${base_name}" "${species_or_pop_name}" g="${this_generation_length}" mu="${this_mutationrate}" depth="${min_depth}" seuqence quality="${sequence_quality}
 
 cd ${output_mid_file_dict}/03.psmc
 
@@ -135,12 +138,16 @@ cd ${output_mid_file_dict}/01.vcf
 
 ${samtools_path} merge -b ${bam_list_path} ${species_or_pop_name}.bam.merged
 
-${samtools_path} sort ${species_or_pop_name}.bam.merged|bcftools mpileup -Ou -I -f ${this_reference} - |bcftools call -c -Ov > ${output_mid_file_dict}/01.vcf/${species_or_pop_name}.merged.vcf
+${samtools_path} sort -m 10G ${species_or_pop_name}.bam.merged|bcftools mpileup -Ou -I -f ${this_reference} - |bcftools call -c -Ov > ${output_mid_file_dict}/01.vcf/${species_or_pop_name}.merged.vcf
 wait
+
 cd ..
 
 ${vcfutils_pl_path} vcf2fq -d ${min_depth} ${output_mid_file_dict}/01.vcf/${species_or_pop_name}.merged.vcf| gzip > ${output_mid_file_dict}/03.psmc/${species_or_pop_name}.merged.d${min_depth}.psmc.fq.gz
 wait
+
+# rm ${output_mid_file_dict}/01.vcf/${species_or_pop_name}.merged.vcf
+# wait
 
 ${fq2psmcfa_path} -q${sequence_quality} ${output_mid_file_dict}/03.psmc/${species_or_pop_name}.merged.d${min_depth}.psmc.fq.gz > ${output_mid_file_dict}/03.psmc/${species_or_pop_name}.merged.d${min_depth}.psmcfa
 wait
@@ -148,7 +155,9 @@ wait
 ${psmc_path} -N${psmc_N} -t${psmc_t} -r${psmc_r} -p "${psmc_p}" -o ${output_mid_file_dict}/03.psmc/${species_or_pop_name}.merged.d${min_depth}.psmc ${output_mid_file_dict}/03.psmc/${species_or_pop_name}.merged.d${min_depth}.psmcfa
 wait
 
-psmc_title="PSMC plot for sample"${species_or_pop_name}"_merged_\n g="${this_generation_length}" mu="${this_mutationrate}" depth="${min_depth}" seuqence quality="${sequence_quality}
+cd ${output_mid_file_dict}/03.psmc
+
+psmc_title="PSMC plot for sample"${species_or_pop_name}" merged g="${this_generation_length}" mu="${this_mutationrate}" depth="${min_depth}" seuqence quality="${sequence_quality}
 
 ${perl_path} ${psmc_plot_path} \
     -R \
@@ -162,7 +171,8 @@ ${perl_path} ${psmc_plot_path} \
 
 
 ${psmc_util_path}/splitfa ${output_mid_file_dict}/03.psmc/${species_or_pop_name}.merged.d${min_depth}.psmcfa > \
-    ${output_mid_file_dict}/03.psmc/${species_or_pop_name}.merged.d${min_depth}.psmcfa > \
+    ${output_mid_file_dict}/03.psmc/${species_or_pop_name}.merged.d${min_depth}.split.psmcfa \
+
 
 wait
     """
